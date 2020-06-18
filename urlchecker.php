@@ -1,7 +1,7 @@
 <?php
 
 $patternProtocol = '/[a-z]{1,}[":"]/m';
-$patternDomain = '/[a-z]{1,}["."]{1}[a-z]{2,}/m';
+$patternDomain = '/[\w]{1,}[.]{1}.{1,}[.]{1}[\w]{2,}/m';
 $patternPath = '/["\/"].{1,}/m';
 $input = $argv[1];
 $offset = 0;
