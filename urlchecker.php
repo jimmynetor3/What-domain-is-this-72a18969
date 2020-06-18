@@ -42,9 +42,9 @@ if (preg_match($patternDomainShort, $input, $matches)) {
         $NumberOfLetters = strlen($matches[0]);
         $offset = $offset + $NumberOfLetters;
         echo("domain : $longDomainText" . PHP_EOL);
-    } elseif (!$longDomain && !$shortDomain) {
-        exit("please enter a valid url");
     }
+} elseif (!$longDomain && !$shortDomain) {
+    exit("please enter a valid url");
 }
 
 if (preg_match($patternPath, $input, $matches, PREG_OFFSET_CAPTURE, $offset)) {
