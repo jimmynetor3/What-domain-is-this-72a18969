@@ -21,25 +21,27 @@ if (preg_match($patternProtocol, $input, $matches)) {
     echo("geen protocol gevonden" . PHP_EOL);
 }
 
-if (preg_match($patternDomainShort, $input, $matches)) {
+if (preg_match($patternDomainShort, $input, $matchesShort)) {
     $shortDomain = true;
-    foreach ($matches as $word) {
+    foreach ($matchesShort as $word) {
         $shortDomainText = $word;
     }
 
-    if (preg_match($patternDomainLong, $input, $matches)) {
-        $longDomain = true;
-        foreach ($matches as $word) {
-            $longDomainText = $word;
+    if (preg_match($patternDomainLong, $input, $matchesLong)) {
+        if (isset($matchesLong)) {
+            $longDomain = true;
+            foreach ($matchesLong as $word) {
+                $longDomainText = $word;
+            }
         }
     }
 
     if (!$longDomain && $shortDomain) {
-        $NumberOfLetters = strlen($matches[0]);
+        $NumberOfLetters = strlen($matchesShort[0]);
         $offset = $offset + $NumberOfLetters;
         echo("domain : " . "$shortDomainText" . PHP_EOL);
     } elseif ($longDomain && $shortDomain) {
-        $NumberOfLetters = strlen($matches[0]);
+        $NumberOfLetters = strlen($matchesLong[0]);
         $offset = $offset + $NumberOfLetters;
         echo("domain : $longDomainText" . PHP_EOL);
     }
