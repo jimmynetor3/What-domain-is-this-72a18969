@@ -1,26 +1,18 @@
 <?php
 
 $patternProtocol = '/[a-z]{1,}[":"]/m';
-$patternDomainShort = '/[\w]{1,}[.]{1}[\w]{2,}/m';
-$patternDomainLong = '/[\w]{1,}[.]{1}[^\/]{1,}[.]{1}[\w]{2,}/m';
+$patternDomainShort = '/(?<protocol>[\w]{1,}):\/\/(?<domain>[\S]{1,}[.]{1}[\w]{2,})\/(?<path>.{1,})/m';
+$patternDomainLong = '/(?<protocol>[\w]{1,}):\/\/(?<domain>[\w]{1,}[.]{1}[^\/]{1,}[.]{1}[\w]{2,})\/(?<path>.{1,})/m';
+$domainLong = '/[\w]{1,}[.]{1}[^\/]{1,}[.]{1}[\w]{2,}/m';
+$domainShort = '/[\S]{1,}[.]{1}[\w]{2,}/m';
 $patternPath = '/["\/"].{1,}/m';
 $input = $argv[1];
 $offset = 0;
-
 $longDomain = false;
 $shortDomain = false;
 
-if (preg_match($patternProtocol, $input, $matches)) {
-    $NumberOfLetters = strlen($matches[0]);
-    $offset = $offset + $NumberOfLetters;
 
-    foreach ($matches as $word) {
-        echo("protocol : " . $word . PHP_EOL);
-    }
-} else {
-    echo("geen protocol gevonden" . PHP_EOL);
-}
-
+//checks if a whole url is given
 if (preg_match($patternDomainShort, $input, $matchesShort)) {
     $shortDomain = true;
     foreach ($matchesShort as $word) {
@@ -35,24 +27,63 @@ if (preg_match($patternDomainShort, $input, $matchesShort)) {
             }
         }
     }
-
     if (!$longDomain && $shortDomain) {
-        $NumberOfLetters = strlen($matchesShort[0]);
-        $offset = $offset + $NumberOfLetters;
-        echo("domain : " . "$shortDomainText" . PHP_EOL);
+        echo("protocol : " . $matchesShort['protocol'] . PHP_EOL . "domain : " . $matchesShort['domain'] . PHP_EOL . "path : " . $matchesShort['path']);
     } elseif ($longDomain && $shortDomain) {
-        $NumberOfLetters = strlen($matchesLong[0]);
-        $offset = $offset + $NumberOfLetters;
-        echo("domain : $longDomainText" . PHP_EOL);
+        echo("protocol : " . $matchesLong['protocol'] . PHP_EOL . "domain : " . $matchesLong['domain'] . PHP_EOL . "path : " . $matchesLong['path']);
     }
+//    checks if an incomplete url is given
 } elseif (!$longDomain && !$shortDomain) {
-    exit("please enter a valid url");
+
+//    checks for protocol
+    if (preg_match($patternProtocol, $input, $matches)) {
+        $NumberOfLetters = strlen($matches[0]);
+        $offset = $offset + $NumberOfLetters;
+
+        foreach ($matches as $word) {
+            echo("protocol : " . $word . PHP_EOL);
+        }
+    } else {
+        echo("no protocol found" . PHP_EOL);
+    }
+//checks for domain
+    if (preg_match($domainShort, $input, $matchesShort)) {
+        $shortDomain = true;
+        foreach ($matchesShort as $word) {
+            $shortDomainText = $word;
+        }
+
+        if (preg_match($domainLong, $input, $matchesLong)) {
+            if (isset($matchesLong)) {
+                $longDomain = true;
+                foreach ($matchesLong as $word) {
+                    $longDomainText = $word;
+                }
+            }
+        }
+        if (!$longDomain && $shortDomain) {
+            foreach ($matchesShort as $word) {
+                echo("domain : " . $word . PHP_EOL);
+            }
+        } elseif ($longDomain && $shortDomain) {
+            foreach ($matchesLong as $word) {
+                echo("domain : " . $word . PHP_EOL);
+            }
+        }else{
+            die("give a valid url");
+        }
+    }
+
+
+//checks for path
+    if (preg_match($patternPath, $input, $matches)) {
+        foreach ($matches as $word) {
+            echo("path : " . $word . PHP_EOL);
+        }
+    } else {
+        echo("no path found");
+    }
+
 }
 
-if (preg_match($patternPath, $input, $matches, PREG_OFFSET_CAPTURE, $offset)) {
-    foreach ($matches as $word) {
-        echo("path : " . $word[0] . PHP_EOL);
-    }
-} else {
-    echo("no path found");
-}
+
