@@ -10,6 +10,8 @@ $input = $argv[1];
 $offset = 0;
 $longDomain = false;
 $shortDomain = false;
+$longIncompleteDomain = false;
+$shortIncompleteDomain = false;
 
 
 //checks if a whole url is given
@@ -47,31 +49,32 @@ if (preg_match($patternDomainShort, $input, $matchesShort)) {
     }
 //checks for domain
     if (preg_match($domainShort, $input, $matchesShort)) {
-        $shortDomain = true;
+        $shortIncompleteDomain = true;
         foreach ($matchesShort as $word) {
             $shortDomainText = $word;
         }
-
+    }
         if (preg_match($domainLong, $input, $matchesLong)) {
             if (isset($matchesLong)) {
-                $longDomain = true;
+                $longIncompleteDomain = true;
                 foreach ($matchesLong as $word) {
                     $longDomainText = $word;
                 }
             }
         }
-        if (!$longDomain && $shortDomain) {
+        if (!$longIncompleteDomain && $shortIncompleteDomain) {
             foreach ($matchesShort as $word) {
                 echo("domain : " . $word . PHP_EOL);
             }
-        } elseif ($longDomain && $shortDomain) {
+        } elseif ($longIncompleteDomain && $shortIncompleteDomain) {
             foreach ($matchesLong as $word) {
                 echo("domain : " . $word . PHP_EOL);
             }
-        } else {
-            die("give a valid url");
+        } elseif (!$longIncompleteDomain && !$shortIncompleteDomain) {
+            echo('give a valid url ' . PHP_EOL);
+
         }
-    }
+
 
 
 //checks for path
