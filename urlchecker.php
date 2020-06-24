@@ -34,7 +34,6 @@ if (preg_match($patternDomainShort, $input, $matchesShort)) {
     }
 //    checks if an incomplete url is given
 } elseif (!$longDomain && !$shortDomain) {
-
 //    checks for protocol
     if (preg_match($patternProtocol, $input, $matches)) {
         $NumberOfLetters = strlen($matches[0]);
@@ -69,7 +68,7 @@ if (preg_match($patternDomainShort, $input, $matchesShort)) {
             foreach ($matchesLong as $word) {
                 echo("domain : " . $word . PHP_EOL);
             }
-        }else{
+        } else {
             die("give a valid url");
         }
     }
@@ -83,7 +82,6 @@ if (preg_match($patternDomainShort, $input, $matchesShort)) {
     } else {
         echo("no path found");
     }
-
 }
 
 
